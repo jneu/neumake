@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2013 Joshua Neuheisel
+ * This software is distributed under the license detailed in the file LICENSE.txt.
+ */
+
 var make = require('./neumake');
 
 var rules = {

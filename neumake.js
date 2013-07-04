@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2013 Joshua Neuheisel
+ * This software is distributed under the license detailed in the file LICENSE.txt.
+ */
+
 var fs = require('fs'), child_process = require('child_process');
 
 exports.process = function (rules, goal, callback) {
