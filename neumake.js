@@ -14,7 +14,7 @@ exports.process = function (rules, goal, callback) {
     };
 
     /*
-     * Start processing the next target.
+     * Process the next target.
      */
     function step () {
         var next_target_name = find_next_target_to_process(goal);
@@ -22,15 +22,11 @@ exports.process = function (rules, goal, callback) {
             return callback(true);
         }
 
-        var next_target = rules[next_target_name];
-        if (next_target) {
-            process_target(next_target_name);
+        if (rules[next_target_name]) {
+            process_goal(next_target_name);
         }
         else {
-            /*
-             * As a special case, process a target with no recipe or prerequisites.
-             */
-            process_simple_target(next_target_name);
+            process_simple_goal(next_target_name);
         }
     }
 
@@ -39,11 +35,11 @@ exports.process = function (rules, goal, callback) {
     /*
      * Given the name of a target, find the name of the first target to process that has not already
      * been processed. This will return the original target if all prerequisites have been
-     * processed. If all targets have been processed, an empty string is returned.
+     * processed. If all targets have been processed, false is returned.
      */
     function find_next_target_to_process (target_name) {
         if (processed_targets[target_name]) {
-            return "";
+            return false;
         }
 
         var target = rules[target_name];
@@ -67,125 +63,110 @@ exports.process = function (rules, goal, callback) {
         return target_name;
     }
 
-    /*
-     * If the target is not phony, only remake it if it doesn't exist or if it is older than its
-     * prerequisites.
-     */
-    function process_target (target_name) {
+    function process_goal (target_name) {
         var target = rules[target_name];
 
-        /*
-         * If the target is phony, just run the recipe.
-         */
-        if (target.phony) {
-            return process_recipe(target_name);
+        var recipe = target.recipe;
+        if (!recipe || (0 === recipe.length)) {
+            processed_targets[target_name] = true;
+            return step();
+        }
+
+        function run_recipe_line (i) {
+            console.log(recipe[i]);
+
+            var child = child_process.spawn('/bin/sh', ['-c', recipe[i]], {
+                env: process.env,
+                stdio: 'inherit'
+            });
+
+            child.on('close', function (code, signal) {
+                if (signal) {
+                    console.log('neumake: *** [' + target_name + '] Terminated by signal: '
+                            + signal);
+                    callback(false);
+                }
+                else if (0 === code) {
+                    if (i >= (recipe.length - 1)) {
+                        processed_targets[target_name] = true;
+                        step();
+                    }
+                    else {
+                        run_recipe_line(i + 1);
+                    }
+                }
+                else {
+                    console.log('make: *** [' + target_name + '] Error ' + code);
+                    callback(false);
+                }
+            });
         }
 
         /*
-         * Get the last modified time on the target. If there are any errors (e.g., it doesn't exit)
-         * then run the recipe.
+         * If the target if phony, always run the recipe.
          */
-        fs.stat(target_name, function (err, stats) {
-            if (err) {
-                process_recipe(target_name);
+        if (target.phony) {
+            return run_recipe_line(0);
+        }
+
+        fs.stat(target_name, function (target_err, target_stats) {
+            if (target_err) {
+                run_recipe_line(0);
             }
             else {
-                /*
-                 * If any non-phony prereqs are newer, then run the recipe. Otherwise, mark the
-                 * target as processed.
-                 */
+                var prereqs = target.prerequisites;
 
-                var target_time = stats.mtime.getTime();
-
-                var to_check = [], i;
-                for (i = 0; i < target.prerequisites.length; i++) {
-                    var prereq = target.prerequisites[i];
-                    if (!rules[prereq] || !rules[prereq].phony) {
-                        to_check.push(prereq);
-                    }
+                if (!prereqs || (0 === prereqs.length)) {
+                    processed_targets[target_name] = true;
+                    step();
                 }
+                else {
+                    function check_prereq (i) {
+                        if (rules[prereqs[i]] && rules[prereqs[i]].phony) {
+                            return run_recipe_line(0);
+                        }
 
-                function check_prereq () {
-                    if (to_check.length > 0) {
-                        var next_prereq = to_check.pop();
-
-                        fs.stat(next_prereq, function (err, stats) {
-                            if (err) {
-                                console.error('*** stat failed for target "' + next_prereq + '".');
-                                callback(false);
+                        fs.stat(prereqs[i], function (prereq_err, prereq_stats) {
+                            if (prereq_err) {
+                                run_recipe_line(0);
                             }
                             else {
-                                if (stats.mtime.getTime() > target_time) {
-                                    process_recipe(target_name);
+                                if (prereq_stats.mtime.getTime() > target_stats.mtime.getTime()) {
+                                    run_recipe_line(0);
                                 }
                                 else {
-                                    check_prereq();
+                                    if (i >= (prereqs.length - 1)) {
+                                        processed_targets[target_name] = true;
+                                        step();
+                                    }
+                                    else {
+                                        check_prereq(i + 1);
+                                    }
                                 }
                             }
                         });
                     }
-                    else {
-                        processed_targets[target_name] = true;
-                        step();
-                    }
-                }
 
-                check_prereq();
+                    check_prereq(0);
+                }
             }
         });
     }
 
     /*
-     * If there is no rule for a target, assume it's a file and check that it exists.
+     * If there is no rule for a goal, just check that it exists.
      */
-    function process_simple_target (target_name) {
+    function process_simple_goal (target_name) {
         fs.exists(target_name, function (exists) {
             if (exists) {
                 processed_targets[target_name] = true;
                 step();
             }
             else {
-                console.error('*** Required target "' + target_name
-                        + '" does not exist and no recipe is found to make it.');
+                console.log('neumake: *** Required target `' + target_name + '\' not found.');
                 callback(false);
             }
         });
-    }
-
-    function process_recipe (target_name) {
-        var target = rules[target_name];
-
-        if (target.recipe) {
-            function run_recipe_line (recipe, i) {
-                if (i >= recipe.length) {
-                    processed_targets[target_name] = true;
-                    step();
-                }
-                else {
-                    console.log(recipe[i]);
-
-                    var child = child_process.spawn('/bin/sh', ['-c', recipe[i]], {
-                        env: process.env,
-                        stdio: 'inherit'
-                    });
-
-                    child.on('close', function (code, signal) {
-                        if (0 == code) {
-                            run_recipe_line(recipe, i + 1);
-                        }
-                        else {
-                            console.error('*** Child process returned code: ' + code + '.');
-                            callback(false);
-                        }
-                    });
-                }
-            }
-
-            return run_recipe_line(target.recipe, 0);
-        }
-
-        processed_targets[target_name] = true;
-        step();
     }
 
     /*

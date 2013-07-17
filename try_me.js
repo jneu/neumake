@@ -24,7 +24,4 @@ var rules = {
     }
 };
 
-make.process(rules, 'all', function (success) {
-    console.log(success ? '*** Success' : '*** Failure');
-    process.exit(success ? 0 : 1);
-});
+make.process(rules, 'all');
