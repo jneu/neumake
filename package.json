@@ -1,7 +1,7 @@
 {
     "name": "neumake",
-    "version": "1.0.0",
-    "description": "An engine for the make build utility written in node.js.",
+    "version": "1.0.1",
+    "description": "The make build utility, written in node.js.",
     "licenses": [
         {
             "type": "MIT",
