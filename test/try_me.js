@@ -3,7 +3,7 @@
  * This software is distributed under the license detailed in the file LICENSE.txt.
  */
 
-var make = require('./neumake');
+var make = require('../../neumake');
 
 var rules = {
     'all': {
@@ -24,4 +24,10 @@ var rules = {
     }
 };
 
-make.process(rules, 'all');
+var goal = 'goal';
+
+if (process.argv.length > 2) {
+    goal = process.argv[2];
+}
+
+make.process(rules, goal);
