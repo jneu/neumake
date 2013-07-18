@@ -24,7 +24,7 @@ var rules = {
     }
 };
 
-var goal = 'goal';
+var goal = 'all';
 
 if (process.argv.length > 2) {
     goal = process.argv[2];

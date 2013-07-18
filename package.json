@@ -5,8 +5,8 @@
     "licenses": [
         {
             "type": "MIT",
-            "url": "https://raw.github.com/jneu/neumake/master/LICENSE.txt
-        }"
+            "url": "https://raw.github.com/jneu/neumake/master/LICENSE.txt"
+        }
     ],
     "author": "Joshua Neuheisel <joshua@neuheisel.us>",
     "repository": {
