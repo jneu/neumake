@@ -24,10 +24,18 @@ var rules = {
     }
 };
 
+/*
+ * Check for a goal passed on the command line. If none, default to 'all'.
+ */
 var goal = 'all';
 
 if (process.argv.length > 2) {
     goal = process.argv[2];
 }
 
-make.process(rules, goal);
+/*
+ * Get to work!
+ */
+make.process(rules, goal, function (success) {
+    process.exit(success ? 0 : 1);
+});
