@@ -8,9 +8,4 @@ License
 
 Status
 ======
-Ultimately, neumake will be feature-rich enough to replace the standard make utility: `alias make='node neumake.js'`. Currently, the dependency engine and child process spawning are implemented. Next will come Makefile parsing, then `make -k` and `make -j2` support.
-
-Known differences with GNU make
--------------------------------
-1.	Failed targets are not pruned.
-2.	Logging messages are different.
+Ultimately, neumake will be feature-rich enough to replace the standard make utility: `alias make='neumake'`. Currently, the dependency engine, child process spawning, and basic Makefile parsing are implemented. Next will come Makefile variable handling, then `make -k` and `make -j2` support.
