@@ -1,1 +1,3 @@
-int main(int argc, char *argv[]) { return 42; }
+int func(void);
+
+int main(int argc, char *argv[]) { return func(); }

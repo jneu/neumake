@@ -1,6 +1,6 @@
 {
     "name": "neumake",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "The make build utility, written in node.js.",
     "licenses": [
         {
@@ -16,5 +16,6 @@
     "main": "./lib/neumake.js",
     "dependencies": {
         "buffered-reader": ">=1.0.1"
-    }
+    },
+    "bin": "./lib/cli.js"
 }
