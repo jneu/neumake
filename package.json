@@ -2,6 +2,13 @@
     "name": "neumake",
     "version": "1.0.3",
     "description": "The make build utility, written in node.js.",
+    "keywords": [
+        "build",
+        "cli",
+        "make",
+        "makefile",
+        "tool"
+    ],
     "licenses": [
         {
             "type": "MIT",
@@ -15,8 +22,8 @@
     },
     "main": "./lib/neumake.js",
     "dependencies": {
-        "argh": ">=0.1.0",
-        "buffered-reader": ">=1.0.1"
+        "buffered-reader": ">=1.0.1",
+        "node-getopt": ">=0.2.3"
     },
     "bin": "./lib/cli.js"
 }
