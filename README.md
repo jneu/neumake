@@ -12,13 +12,15 @@ Install
 
 Usage
 -----
-`neumake [-j<max number of jobs>] <goal>`  
-Search the current directory for a file named **Makefile**. This file is read for rules which describe targets, their dependencies, and recipes to process.
+`neumake [-j<max number of jobs>] [-k] <goal>`  
+Search the current directory for a file named Makefile. This file is read for rules which describe targets, their dependencies, and recipes to process.
 
 Specifying `-j` followed by a number designates the maximum number of jobs to run simultaneously. The default is `-j1`.
+
+By default, neumake exits on the first failed recipe. Specifying `-k` directs neumake to continue processing targets as long as possible despite errors.
 
 On success, 0 is returned. On failure, 1 is returned.
 
 Status
 ------
-The [test](https://github.com/jneu/neumake/tree/master/test) directory contains an example Makefile which neumake successfully processes. However, neumake is not feature complete. Variables are not currently supported. Neither is `neumake -k`.
+The [test](https://github.com/jneu/neumake/tree/master/test) directory contains an example Makefile which neumake successfully processes. However, neumake is not feature complete yet. Variables are not currently supported.
