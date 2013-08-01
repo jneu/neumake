@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /*
  * Copyright (c) 2013 Joshua Neuheisel
  * This software is distributed under the license detailed in the file LICENSE.txt.

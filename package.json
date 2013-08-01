@@ -1,6 +1,6 @@
 {
     "name": "neumake",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "description": "The make build utility, written in node.js.",
     "keywords": [
         "build",
@@ -25,5 +25,5 @@
         "buffered-reader": ">=1.0.1",
         "node-getopt": ">=0.2.3"
     },
-    "bin": "./lib/cli.js"
+    "bin": "./bin/cli.js"
 }
