@@ -1,6 +1,6 @@
 {
     "name": "neumake",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "description": "The make build utility, written in node.js.",
     "keywords": [
         "build",
