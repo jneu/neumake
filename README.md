@@ -12,7 +12,7 @@ Install
 
 Usage
 -----
-`neumake [-j<max number of jobs>] [-k] <goal>`  
+`neumake [-j|--jobs=<max number of jobs>] [-k|--keep-going] <goal>`  
 Search the current directory for a file named Makefile. This file is read for rules which describe targets, their dependencies, and recipes to process.
 
 Specifying `-j` followed by a number designates the maximum number of jobs to run simultaneously. The default is `-j1`.

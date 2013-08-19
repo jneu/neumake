@@ -11,7 +11,7 @@ var make = require('../../neumake'), DataReader = require('buffered-reader').Dat
 var goal = 'all';
 var max_number_of_jobs = 1;
 
-var opts = new GetOpt([['j', '='], ['k']]).parseSystem();
+var opts = new GetOpt([['j', 'jobs=ARG'], ['k', 'keep-going']]).parseSystem();
 
 if (opts.argv && (opts.argv.length > 0)) {
     goal = opts.argv[0];
@@ -20,7 +20,7 @@ if (opts.argv && (opts.argv.length > 0)) {
 var options = opts.options || {};
 
 if (undefined === options.j) {
-    options.j = 1;
+    options.jobs = 1;
 }
 
 var rules = {};
