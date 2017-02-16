@@ -1,6 +1,6 @@
 {
     "name": "neumake",
-    "version": "1.0.8",
+    "version": "1.0.8-beta.0",
     "description": "The make build utility, written in node.js.",
     "keywords": [
         "build",
@@ -9,21 +9,13 @@
         "makefile",
         "tool"
     ],
-    "licenses": [
-        {
-            "type": "MIT",
-            "url": "https://raw.github.com/jneu/neumake/master/LICENSE.txt"
-        }
-    ],
+    "license": "MIT",
     "author": "Joshua Neuheisel <joshua@neuheisel.us>",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/jneu/neumake.git"
-    },
+    "repository": "jneu/neumake",
     "main": "./lib/neumake.js",
+    "bin": "./bin/cli.js",
     "dependencies": {
-        "buffered-reader": ">=1.0.1",
-        "node-getopt": ">=0.2.3"
-    },
-    "bin": "./bin/cli.js"
+        "buffered-reader": "^1.0.1",
+        "node-getopt": "^0.2.3"
+    }
 }
